@@ -29,7 +29,7 @@ create table emp_work_detail(
     work_id INTEGER,
     emp_id INTEGER,
     emp_amount REAL,
-    emp_tip,
+    emp_tip REAL,
     detail_notes TEXT
 );
 select * from emp_work_detail;

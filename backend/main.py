@@ -1,7 +1,7 @@
 from database import create_connection
 
 def main():
-    create_connection("natural_nails.db")
+    create_connection()
     pass
 
 if __name__=="__main__":
