@@ -1,9 +1,35 @@
+drop table if exists employees;
 create table employees(
-    emp_id INT PRIMARY KEY,
+    emp_id INTEGER PRIMARY KEY AUTOINCREMENT,
     emp_name VARCHAR(50),
     emp_phone VARCHAR(10),
     emp_ssn VARCHAR(10),
-    emp_work_percentage INT,
-    emp_cash_percentage INT,
-    emp
+    emp_address TEXT,
+    emp_work_percentage INTEGER,
+    emp_cash_percentage INTEGER,
+    emp_salary INTEGER
 );
+select * from employees;
+
+drop table if exists works;
+create table works(
+    work_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    work_datetime TEXT,
+    work_amount REAL,
+    work_tip REAL,
+    work_discount REAL,
+    work_grandtotal REAL,
+    work_notes TEXT
+);
+select * from works;
+
+drop table if exists emp_work_detail;
+create table emp_work_detail(
+    detail_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    work_id INTEGER,
+    emp_id INTEGER,
+    emp_amount REAL,
+    emp_tip,
+    detail_notes TEXT
+);
+select * from emp_work_detail;
