@@ -16,15 +16,19 @@ async def get_all_employees():
     return json.dumps(select_all_employees().__dict__)
 
 @app.get("/employees/{emp_id}")
-async def get_all_employees(emp_id: int):
+async def get_employee_id(emp_id: int):
     return json.dumps(select_employee_id(emp_id).__dict__)
 
 @app.post("/employees")
-async def post_employees(request: Request):
+async def post_employee(request: Request):
     data = await request.json()
     new_emp = json.loads(data, object_hook=lambda d: SimpleNamespace(**d))
     new_emp = create_new_employee(new_emp)
     return json.dumps(new_emp.__dict__)
+
+@app.put("/employees")
+async def put_employee(request: Request):
+    
 
 @app.delete("/employees/{emp_id}")
 async def delete_employees(emp_id: int):
