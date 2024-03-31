@@ -1,0 +1,11 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "fastapi_natural_nails",
+            "database": "${workspaceFolder:py_nails_fastapi}/natural_nails.db"
+        }
+    ]
+}
