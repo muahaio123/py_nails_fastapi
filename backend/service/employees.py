@@ -1,8 +1,9 @@
+from typing import Any
 from service.database import getDBConnection, getDBCursor, close_connection
 from sqlite3 import Error
 
 class Employee:
-    def __init__(self, id, name, phone, ssn, address, work_perc, cash_perc, salary) -> None:
+    def __init__(self, id=None, name=None, phone=None, ssn=None, address=None, work_perc=None, cash_perc=None, salary=None) -> None:
         self.emp_id = id
         self.emp_name = name
         self.emp_phone = phone
@@ -11,9 +12,9 @@ class Employee:
         self.emp_work_percentage = work_perc
         self.emp_cash_percentage = cash_perc
         self.emp_salary = salary
-    
+
 # Implement all 4 CRUD operations on employees
-def row_to_employee(row):
+def row_to_employee(row: list[Any]):
     return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
 
 # GET all employees
@@ -36,7 +37,7 @@ def select_employee_id(id: int) -> Employee:
     output = cursor.fetchone()
 
     close_connection()
-    return row_to_employee(output) if output else Employee
+    return row_to_employee(output) if output else Employee()
 
 # POST new Employee
 def create_new_employee(new_emp: Employee) -> Employee:
@@ -84,7 +85,7 @@ def delete_existing_employee(exist_emp_id: int) -> Employee:
 
     try:
         found_emp = select_employee_id(exist_emp_id)
-        if found_emp.id:
+        if found_emp.emp_id:
             cursor.execute("DELETE employees WHERE emp_id=?", (found_emp.emp_id,))
             conn.commit()
         else:
