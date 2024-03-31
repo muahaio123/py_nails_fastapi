@@ -8,3 +8,6 @@ class Works:
         self.work_discount = discount
         self.work_grandtotal = grandtotal
         self.work_notes = notes
+
+    # Implement all 4 CRUD operations on works table
+    

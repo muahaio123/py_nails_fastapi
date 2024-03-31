@@ -8,3 +8,6 @@ class Detail:
         self.emp_amount = emp_amount
         self.emp_tip = emp_tip
         self.detail_notes = detail_notes
+    
+    # Implement all 4 CRUD operations on emp_work_detail table
+    
