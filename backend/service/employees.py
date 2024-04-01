@@ -1,17 +1,27 @@
+from dataclasses import dataclass
 from typing import Any
 from service.database import getDBConnection, getDBCursor, close_connection
 from sqlite3 import Error
 
+@dataclass
 class Employee:
-    def __init__(self, id=None, name=None, phone=None, ssn=None, address=None, work_perc=None, cash_perc=None, salary=None) -> None:
-        self.emp_id = id
-        self.emp_name = name
-        self.emp_phone = phone
-        self.emp_ssn = ssn
-        self.emp_address = address
-        self.emp_work_percentage = work_perc
-        self.emp_cash_percentage = cash_perc
-        self.emp_salary = salary
+    emp_id: int = -1
+    emp_name: str = ""
+    emp_phone: str = ""
+    emp_ssn: str = ""
+    emp_address: str = ""
+    emp_work_percentage: int = 0
+    emp_cash_percentage: int = 0
+    emp_salary: int = 0
+    # def __init__(self, id=None, name=None, phone=None, ssn=None, address=None, work_perc=None, cash_perc=None, salary=None) -> None:
+    #     self.emp_id = id
+    #     self.emp_name = name
+    #     self.emp_phone = phone
+    #     self.emp_ssn = ssn
+    #     self.emp_address = address
+    #     self.emp_work_percentage = work_perc
+    #     self.emp_cash_percentage = cash_perc
+    #     self.emp_salary = salary
 
 # Implement all 4 CRUD operations on employees
 def row_to_employee(row: list[Any]):
@@ -33,7 +43,7 @@ def select_all_employees() -> list[Employee]:
 # GET Employee by ID
 def select_employee_id(id: int) -> Employee:
     cursor = getDBCursor()
-    cursor.execute(f"SELECT * FROM employees WHERE id = {id}")
+    cursor.execute("SELECT * FROM employees WHERE emp_id = ?", (id,))
     output = cursor.fetchone()
 
     close_connection()
@@ -66,8 +76,8 @@ def update_existing_employee(exist_emp: Employee) -> Employee:
     cursor = conn.cursor()
 
     try:
-        cursor.execute("UPDATE employees SET emp_name=?, emp_phone=?, emp_ssn=?, emp_address=?, emp_work_percentage=?, emp_cash_percentage=?, emp_salary=?",
-                       (exist_emp.emp_name, exist_emp.emp_phone, exist_emp.emp_ssn, exist_emp.emp_address, exist_emp.emp_work_percentage, exist_emp.emp_cash_percentage, exist_emp.emp_salary))
+        cursor.execute("UPDATE employees SET emp_name=?, emp_phone=?, emp_ssn=?, emp_address=?, emp_work_percentage=?, emp_cash_percentage=?, emp_salary=? WHERE emp_id=?",
+                       (exist_emp.emp_name, exist_emp.emp_phone, exist_emp.emp_ssn, exist_emp.emp_address, exist_emp.emp_work_percentage, exist_emp.emp_cash_percentage, exist_emp.emp_salary, exist_emp.emp_id))
         conn.commit()
     except Error as e:
         print(e)
@@ -85,8 +95,8 @@ def delete_existing_employee(exist_emp_id: int) -> Employee:
 
     try:
         found_emp = select_employee_id(exist_emp_id)
-        if found_emp.emp_id:
-            cursor.execute("DELETE employees WHERE emp_id=?", (found_emp.emp_id,))
+        if found_emp.emp_id != -1:
+            cursor.execute("DELETE FROM employees WHERE emp_id=?", (exist_emp_id,))
             conn.commit()
         else:
             raise Error
