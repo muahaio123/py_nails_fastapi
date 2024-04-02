@@ -12,11 +12,11 @@ app = FastAPI()
 
 # APIs for Employees
 @app.get("/employees")
-async def get_all_employees():
+def get_all_employees():
     return select_all_employees()
 
 @app.get("/employees/{emp_id}")
-async def get_employee_id(emp_id: int):
+def get_employee_id(emp_id: int):
     return select_employee_id(emp_id)
 
 @app.post("/employees")
