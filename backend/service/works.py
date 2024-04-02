@@ -1,13 +1,14 @@
+from dataclasses import dataclass
 
+@dataclass
 class Works:
-    def __init__(self, id, datetime, amount, tip, discount, grandtotal, notes) -> None:
-        self.work_id = id
-        self.work_datetime = datetime
-        self.work_amount = amount
-        self.work_tip = tip
-        self.work_discount = discount
-        self.work_grandtotal = grandtotal
-        self.work_notes = notes
+    work_id: int = -1
+    work_datetime: str = ""
+    work_amount: float = 0
+    work_tip: float = 0
+    work_discount: float = 0
+    work_grandtotal: float = 0
+    work_notes: str = ""
 
     # Implement all 4 CRUD operations on works table
     

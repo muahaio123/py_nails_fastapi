@@ -33,3 +33,12 @@ create table emp_work_detail(
     detail_notes TEXT
 );
 select * from emp_work_detail;
+
+drop table if exists payments;
+create table payments(
+    pmt_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    work_id INTEGER,
+    pmt_amount REAL,
+    pmt_type VARCHAR(10)
+);
+select * from payments;
