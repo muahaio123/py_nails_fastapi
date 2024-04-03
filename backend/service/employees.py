@@ -13,15 +13,6 @@ class Employee:
     emp_work_percentage: int = 0
     emp_cash_percentage: int = 0
     emp_salary: int = 0
-    # def __init__(self, id=None, name=None, phone=None, ssn=None, address=None, work_perc=None, cash_perc=None, salary=None) -> None:
-    #     self.emp_id = id
-    #     self.emp_name = name
-    #     self.emp_phone = phone
-    #     self.emp_ssn = ssn
-    #     self.emp_address = address
-    #     self.emp_work_percentage = work_perc
-    #     self.emp_cash_percentage = cash_perc
-    #     self.emp_salary = salary
 
 # Implement all 4 CRUD operations on employees
 def row_to_employee(row: list[Any]):
