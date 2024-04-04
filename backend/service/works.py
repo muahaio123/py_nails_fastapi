@@ -14,34 +14,47 @@ class Works:
     work_grandtotal: float = 0
     work_notes: str = ""
 
-    # Implement all 4 CRUD operations on works table
-def row_to_works(row: list[Any]):
+# Implement all 4 CRUD operations on works table
+async def row_to_works(row: list[Any]):
     return Works(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
-    # GET all employees
-def select_all_employees() -> list[Works]:
+# GET all works
+async def select_all_works() -> list[Works]:
     cursor = getDBCursor()
     cursor.execute("SELECT * FROM works")
     output = cursor.fetchall()
 
-    all_emp_list: list[Works] = []
+    all_works_list: list[Works] = []
     for row in output:
-        all_emp_list.append(row_to_works(row))
+        all_works_list.append(await row_to_works(row))
     
     close_connection()
-    return all_emp_list
+    return all_works_list
 
-# GET Employee by ID
-def select_employee_id(id: int) -> Works:
+# GET work by ID
+async def select_work_id(id: int) -> Works:
     cursor = getDBCursor()
     cursor.execute("SELECT * FROM works WHERE work_id = ?", (id,))
     output = cursor.fetchone()
 
     close_connection()
-    return row_to_works(output) if output else Works()
+    return await row_to_works(output) if output else Works()
 
-# POST new Employee
-def create_new_workloyee(new_work: Works) -> Works:
+# GET works between any 2 dates:
+async def select_work_date(from_date: str, to_date: str) -> list[Works]:
+    cursor = getDBCursor()
+    cursor.execute("SELECT * FROM works WHERE work_datetime BETWEEN '?' AND '?'", (from_date, to_date))
+    output = cursor.fetchall()
+
+    date_works_list: list[Works] = []
+    for row in output:
+        date_works_list.append(await row_to_works(row))
+    
+    close_connection()
+    return date_works_list
+
+# POST / create new works
+async def create_new_work(new_work: Works) -> Works:
     conn = getDBConnection()
     cursor = conn.cursor()
 
@@ -55,14 +68,14 @@ def create_new_workloyee(new_work: Works) -> Works:
         close_connection()
         return Works()
     
-    cursor.execute("SELECT last_insert_rowid()")
+    cursor.execute("SELECT work_id FROM works ORDER BY work_id DESC LIMIT 1")
     new_work.work_id = cursor.fetchone()[0]
 
     close_connection()
     return new_work
 
-# PUT existing Employee
-def update_existing_employee(exist_emp: Works) -> Works:
+# PUT / update existing work
+async def update_existing_employee(exist_emp: Works) -> Works:
     conn = getDBConnection()
     cursor = conn.cursor()
 
@@ -79,13 +92,13 @@ def update_existing_employee(exist_emp: Works) -> Works:
     close_connection()
     return exist_emp
 
-# DELETE existing employee by ID
-def delete_existing_employee(exist_work_id: int) -> Works:
+# DELETE existing work by ID
+async def delete_existing_employee(exist_work_id: int) -> Works:
     conn = getDBConnection()
     cursor = conn.cursor()
 
     try:
-        found_emp = select_employee_id(exist_work_id)
+        found_emp = await select_work_id(exist_work_id)
         if found_emp.work_id != -1:
             cursor.execute("DELETE FROM works WHERE work_id=?", (exist_work_id,))
             conn.commit()
