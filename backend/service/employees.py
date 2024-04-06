@@ -2,9 +2,10 @@ from dataclasses import dataclass
 from typing import Any
 from service.database import pool
 from sqlite3 import Error
+from pydantic import BaseModel
 
 @dataclass
-class Employee:
+class Employee(BaseModel):
     emp_id: int = -1
     emp_name: str = ""
     emp_phone: str = ""
@@ -14,9 +15,15 @@ class Employee:
     emp_cash_percentage: int = 0
     emp_salary: int = 0
 
+def getDefultEmployee():
+    return Employee(emp_id=-1, emp_name="", emp_phone="", emp_ssn="", emp_address="", emp_work_percentage=0, emp_cash_percentage=0, emp_salary=0)
+
 # Implement all 4 CRUD operations on employees
-def row_to_employee(row: list[Any]):
-    return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+async def row_to_employee(row: list[Any]):
+    return Employee(emp_id=row[0], emp_name=row[1], emp_phone=row[2], emp_ssn=row[3], emp_address=row[4], emp_work_percentage=row[5], emp_cash_percentage=row[6], emp_salary=row[7])
+
+async def list_to_employess(rows: list[Any]):
+    return [await row_to_employee(row) for row in rows]
 
 # GET all employees
 async def select_all_employees() -> list[Employee]:
@@ -25,12 +32,8 @@ async def select_all_employees() -> list[Employee]:
 
         cursor.execute("SELECT * FROM employees")
         output = cursor.fetchall()
-
-        all_emp_list: list[Employee] = []
-        for row in output:
-            all_emp_list.append(row_to_employee(row))
     
-    return all_emp_list
+    return await list_to_employess(output)
 
 # GET Employee by ID
 async def select_employee_id(id: int) -> Employee:
@@ -40,7 +43,7 @@ async def select_employee_id(id: int) -> Employee:
         cursor.execute("SELECT * FROM employees WHERE emp_id = ?", (id,))
         output = cursor.fetchone()
 
-    return row_to_employee(output) if output else Employee()
+    return await row_to_employee(output) if output else getDefultEmployee()
 
 # POST new Employee
 async def create_new_employee(new_emp: Employee) -> Employee:
@@ -56,7 +59,7 @@ async def create_new_employee(new_emp: Employee) -> Employee:
         except Error as e:
             print(e)
             conn.rollback()
-            return Employee()
+            return getDefultEmployee()
 
     return new_emp
 
@@ -76,7 +79,7 @@ async def update_existing_employee(exist_emp: Employee) -> Employee:
         except Error as e:
             print(e)
             conn.rollback()
-            return Employee()
+            return getDefultEmployee()
     
     return exist_emp
 
@@ -95,6 +98,6 @@ async def delete_existing_employee(exist_emp_id: int) -> Employee:
         except Error as e:
             print(e)
             conn.rollback()
-            return Employee()
+            return getDefultEmployee()
     
     return found_emp

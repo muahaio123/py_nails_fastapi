@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from service.database import pool
 from typing import Any
 from sqlite3 import Error
-
+from pydantic import BaseModel
 
 @dataclass
-class Works:
+class Works(BaseModel):
     work_id: int = -1
     work_datetime: str = ""
     work_amount: float = 0
@@ -14,9 +14,12 @@ class Works:
     work_grandtotal: float = 0
     work_notes: str = ""
 
+def getDefaultWorks() -> Works:
+    return Works(work_id=-1, work_datetime="", work_amount=0, work_tip=0, work_discount=0, work_grandtotal=0, work_notes="")
+
 # Implement all 4 CRUD operations on works table
 async def row_to_works(row: list[Any]):
-    return Works(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+    return Works(work_id=row[0], work_datetime=row[1], work_amount=row[2], work_tip=row[3], work_discount=row[4], work_grandtotal=row[5], work_notes=row[6])
 
 async def list_to_works(rows: list[Any]):
     return [await row_to_works(row) for row in rows]
@@ -37,7 +40,7 @@ async def select_work_id(id: int) -> Works:
         cursor.execute("SELECT * FROM works WHERE work_id = ?", (id,))
         output = cursor.fetchone()
 
-    return await row_to_works(output) if output else Works()
+    return await row_to_works(output) if output else getDefaultWorks()
 
 # GET works between any 2 dates:
 async def select_works_between_dates(from_date: str, to_date: str) -> list[Works]:
@@ -63,7 +66,7 @@ async def create_new_work(new_work: Works) -> Works:
         except Error as e:
             print(e)
             conn.rollback()
-            return Works()
+            return getDefaultWorks()
 
     return new_work
 
@@ -83,7 +86,7 @@ async def update_existing_work(exist_work: Works) -> Works:
         except Error as e:
             print(e)
             conn.rollback()
-            return Works()
+            return getDefaultWorks()
     
     return exist_work
 
@@ -102,7 +105,7 @@ async def delete_existing_work(exist_work_id: int) -> Works:
         except Error as e:
             print(e)
             conn.rollback()
-            return Works()
+            return getDefaultWorks()
     
     return found_work
     
