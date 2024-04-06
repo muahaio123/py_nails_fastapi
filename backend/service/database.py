@@ -1,9 +1,3 @@
-# import sqlite3
-
-# def create_connection() -> sqlite3.Connection:
-#     # create a database connection to a SQLite database
-#     return sqlite3.connect("../natural_nails.db")
-
 import queue
 import sqlite3
 from contextlib import contextmanager
@@ -38,7 +32,5 @@ class ConnectionPool:
         finally:
             self.release_connection(conn)
         
-    
-
 # initialize connection pool
 pool = ConnectionPool(12, '../natural_nails.db')
