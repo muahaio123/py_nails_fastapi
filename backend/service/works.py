@@ -18,19 +18,17 @@ class Works:
 async def row_to_works(row: list[Any]):
     return Works(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
+async def list_to_works(rows: list[Any]):
+    return [await row_to_works(row) for row in rows]
+
 # GET all works
 async def select_all_works() -> list[Works]:
     with pool.connection() as conn:
         cursor = conn.cursor()
-
         cursor.execute("SELECT * FROM works")
         output = cursor.fetchall()
-
-        all_works_list: list[Works] = []
-        for row in output:
-            all_works_list.append(await row_to_works(row))
     
-    return all_works_list
+    return await list_to_works(output)
 
 # GET work by ID
 async def select_work_id(id: int) -> Works:
@@ -45,15 +43,11 @@ async def select_work_id(id: int) -> Works:
 async def select_works_between_dates(from_date: str, to_date: str) -> list[Works]:
     with pool.connection() as conn:
         cursor = conn.cursor()
-
         cursor.execute("SELECT * FROM works WHERE work_datetime BETWEEN ? AND ?", (from_date, to_date))
         output = cursor.fetchall()
 
-        date_works_list: list[Works] = []
-        for row in output:
-            date_works_list.append(await row_to_works(row))
-    
-    return date_works_list
+    return await list_to_works(output)
+
 
 # POST / create new works
 async def create_new_work(new_work: Works) -> Works:
@@ -63,15 +57,13 @@ async def create_new_work(new_work: Works) -> Works:
         try:
             cursor.execute("INSERT INTO works(work_datetime, work_amount, work_tip, work_discount, work_grandtotal, work_notes) VALUES(?, ?, ?, ?, ?, ?)",
                         (new_work.work_datetime, new_work.work_amount, new_work.work_tip, new_work.work_discount, new_work.work_grandtotal, new_work.work_notes))
+            cursor.execute("SELECT work_id FROM works ORDER BY work_id DESC LIMIT 1")
+            new_work.work_id = cursor.fetchone()[0]
             conn.commit()
         except Error as e:
             print(e)
             conn.rollback()
-            conn.close()
             return Works()
-        
-        cursor.execute("SELECT work_id FROM works ORDER BY work_id DESC LIMIT 1")
-        new_work.work_id = cursor.fetchone()[0]
 
     return new_work
 
@@ -82,12 +74,12 @@ async def update_existing_work(exist_work: Works) -> Works:
 
         try:
             found_work = await select_work_id(exist_work.work_id)
-            if found_work != -1:
+            if found_work.work_id != -1:
                 cursor.execute("UPDATE works SET work_datetime=?, work_amount=?, work_tip=?, work_discount=?, work_grandtotal=?, work_notes=? WHERE work_id=?",
                             (exist_work.work_datetime, exist_work.work_amount, exist_work.work_tip, exist_work.work_discount, exist_work.work_grandtotal, exist_work.work_notes, exist_work.work_id))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"work_id={found_work.work_id} cannot be found in table:works")
         except Error as e:
             print(e)
             conn.rollback()
@@ -106,7 +98,7 @@ async def delete_existing_work(exist_work_id: int) -> Works:
                 cursor.execute("DELETE FROM works WHERE work_id=?", (exist_work_id,))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"work_id={found_work.work_id} cannot be found in table:works")
         except Error as e:
             print(e)
             conn.rollback()

@@ -50,14 +50,13 @@ async def create_new_employee(new_emp: Employee) -> Employee:
         try:
             cursor.execute("INSERT INTO employees(emp_name, emp_phone, emp_ssn, emp_address, emp_work_percentage, emp_cash_percentage, emp_salary) VALUES(?, ?, ?, ?, ?, ?, ?)",
                         (new_emp.emp_name, new_emp.emp_phone, new_emp.emp_ssn, new_emp.emp_address, new_emp.emp_work_percentage, new_emp.emp_cash_percentage, new_emp.emp_salary))
+            cursor.execute("SELECT emp_id FROM employees ORDER BY emp_id DESC LIMIT 1")
+            new_emp.emp_id = cursor.fetchone()[0]
             conn.commit()
         except Error as e:
             print(e)
             conn.rollback()
             return Employee()
-        
-        cursor.execute("SELECT emp_id FROM employees ORDER BY emp_id DESC LIMIT 1")
-        new_emp.emp_id = cursor.fetchone()[0]
 
     return new_emp
 
@@ -73,7 +72,7 @@ async def update_existing_employee(exist_emp: Employee) -> Employee:
                             (exist_emp.emp_name, exist_emp.emp_phone, exist_emp.emp_ssn, exist_emp.emp_address, exist_emp.emp_work_percentage, exist_emp.emp_cash_percentage, exist_emp.emp_salary, exist_emp.emp_id))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"emp_id={found_emp.emp_id} cannot be found in table:employees")
         except Error as e:
             print(e)
             conn.rollback()
@@ -92,7 +91,7 @@ async def delete_existing_employee(exist_emp_id: int) -> Employee:
                 cursor.execute("DELETE FROM employees WHERE emp_id=?", (exist_emp_id,))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"emp_id={found_emp.emp_id} cannot be found in table:employees")
         except Error as e:
             print(e)
             conn.rollback()
