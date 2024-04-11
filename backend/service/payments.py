@@ -77,7 +77,7 @@ async def update_existing_payment(exist_pmt: Payments) -> Payments:
                             (exist_pmt.work_id, exist_pmt.pmt_amount, exist_pmt.pmt_type, exist_pmt.pmt_id))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"pmt_id={exist_pmt.pmt_id} cannot be found in table:payments")
         except Error as e:
             print(e)
             conn.rollback()
@@ -96,7 +96,7 @@ async def delete_existing_payment(exist_pmt_id: int) -> Payments:
                 cursor.execute("DELETE FROM payments WHERE pmt_id=?", (exist_pmt_id,))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"pmt_id={exist_pmt_id} cannot be found in table:payments")
         except Error as e:
             print(e)
             conn.rollback()

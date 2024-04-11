@@ -90,7 +90,7 @@ async def update_existing_detail(exist_detail: Detail) -> Detail:
                             (exist_detail.work_id, exist_detail.emp_id, exist_detail.emp_amount, exist_detail.emp_tip, exist_detail.detail_notes, exist_detail.detail_id))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"detail_id={exist_detail.detail_id} cannot be found in table:emp_work_detail")
         except Error as e:
             print(e)
             conn.rollback()
@@ -109,7 +109,7 @@ async def delete_existing_detail(exist_detail_id: int) -> Detail:
                 cursor.execute("DELETE FROM emp_work_detail WHERE detail_id=?", (exist_detail_id,))
                 conn.commit()
             else:
-                raise Error
+                raise Error(f"detail_id={exist_detail_id} cannot be found in table:emp_work_detail")
         except Error as e:
             print(e)
             conn.rollback()
