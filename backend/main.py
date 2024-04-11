@@ -64,14 +64,14 @@ async def get_detail_id(work_id: int) -> emp_work_detail.Detail:
     return await emp_work_detail.select_detail_id(work_id)
 
 # GET detail by list of work_ids
-@app.get("/details}")
-async def get_details_workid_list(q: str = Query(None)) -> list[emp_work_detail.Detail]:
-    return await emp_work_detail.select_detail_workdids([int(id) for id in q.split('-')])
+@app.get("/details")
+async def get_details_workid_list(work_ids: str = Query(None)) -> list[emp_work_detail.Detail]:
+    return await emp_work_detail.select_detail_workdids([int(id) for id in work_ids.split('-')])
 
 # GET details by emp_id and list of work_ids
 @app.get("/details/{emp_id}")
-async def get_detail_empid_workids(emp_id: int, q: str = Query(None)) -> list[emp_work_detail.Detail]:
-    return await emp_work_detail.select_detail_empid_workids(emp_id, [int(id) for id in q.split('-')])
+async def get_detail_empid_workids(emp_id: int, work_ids: str = Query(None)) -> list[emp_work_detail.Detail]:
+    return await emp_work_detail.select_detail_empid_workids(emp_id, [int(id) for id in work_ids.split('-')])
 
 @app.post("/details")
 async def post_detail(new_detail: emp_work_detail.Detail) -> emp_work_detail.Detail:
@@ -85,3 +85,30 @@ async def put_detail(exist_detail: emp_work_detail.Detail) -> emp_work_detail.De
 async def delete_detail(detail_id: int) -> emp_work_detail.Detail:
     return await emp_work_detail.delete_existing_detail(detail_id)
 ##### APIs for Emp_Work_Detail #####
+
+##### APIs for Payments #####
+@app.get("/payments")
+async def get_all_payments() -> list[payments.Payments]:
+    return await payments.select_all_payments()
+
+@app.get("/payments/{pmt_id}")
+async def get_payment_id(pmt_id: int) -> payments.Payments:
+    return await payments.select_payment_id(pmt_id)
+
+# GET detail by list of work_ids
+@app.get("/payments")
+async def get_payments_workid_list(pmt_ids: str = Query(None)) -> list[payments.Payments]:
+    return await payments.select_payment_workdids([int(id) for id in pmt_ids.split('-')])
+
+@app.post("/payments")
+async def post_payment(new_detail: payments.Payments) -> payments.Payments:
+    return await payments.create_new_payment(new_detail)
+
+@app.put("/payments")
+async def put_payment(exist_detail: payments.Payments) -> payments.Payments:
+    return await payments.update_existing_payment(exist_detail)    
+
+@app.delete("/payments/{pmt_id}")
+async def delete_payments(pmt_id: int) -> payments.Payments:
+    return await payments.delete_existing_payment(pmt_id)
+##### APIs for Payments #####
