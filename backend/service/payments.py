@@ -39,10 +39,10 @@ async def select_payment_id(pmt_id: int) -> Payments:
     return await row_to_payment(output) if output else getDefaultPayment()
 
 # GET payments by list of pmt_ids(s):
-async def select_payment_workdids(pmt_ids: list[int]) -> list[Payments]:
+async def select_payment_workdids(pmt_ids: str) -> list[Payments]:
     with pool.connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM payments WHERE pmt_id IN (?)", (', '.join(map(str, pmt_ids)),))
+        cursor.execute("SELECT * FROM payments WHERE pmt_id IN (?)", (pmt_ids.replace('-', ','),))
         output = cursor.fetchall()
     
     return await list_to_payments(output)

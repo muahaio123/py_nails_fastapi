@@ -19,7 +19,8 @@
   margin: auto;
   padding: 20px;
   border: 3px solid #888;
-  width: 50%;
+  width: 40%;
+  height: 40%;
 }
 
 /* The Close Button */
@@ -28,8 +29,8 @@
   font-size: 34px;
   font-weight: bold;
   position: relative;
-  top: 1%;
   left: 98%;
+  margin-right: auto;
 }
 
 .close:hover,

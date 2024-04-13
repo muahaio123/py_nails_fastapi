@@ -42,20 +42,20 @@ async def select_detail_id(id: int) -> Detail:
     return await row_to_detail(output) if output else getDefaultDetail()
 
 # GET emp_work_detail by list of work_id(s):
-async def select_detail_workdids(work_ids: list[int]) -> list[Detail]:
+async def select_detail_workdids(work_ids: str) -> list[Detail]:
     with pool.connection() as conn:
         cursor = conn.cursor()
 
-        cursor.execute("SELECT * FROM emp_work_detail WHERE work_id IN (?)", (', '.join(map(str, work_ids)),))
+        cursor.execute("SELECT * FROM emp_work_detail WHERE work_id IN (?)", (work_ids.replace('-', ','),))
         output = cursor.fetchall()
     
     return await list_to_detail(output)
 
 # GET emp_work_detail by emp_id and list of work_id(s):
-async def select_detail_empid_workids(emp_id: int, work_ids: list[int]) -> list[Detail]:
+async def select_detail_empid_workids(emp_id: int, work_ids: str) -> list[Detail]:
     with pool.connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM emp_work_detail WHERE emp_id = ? AND work_id IN (?)", (emp_id, ', '.join(map(str, work_ids))))
+        cursor.execute("SELECT * FROM emp_work_detail WHERE emp_id = ? AND work_id IN (?)", (emp_id, work_ids.replace('-', ',')))
         output = cursor.fetchall()
     
     return await list_to_detail(output)

@@ -66,12 +66,12 @@ async def get_detail_id(work_id: int) -> emp_work_detail.Detail:
 # GET detail by list of work_ids
 @app.get("/details")
 async def get_details_workid_list(work_ids: str = Query(None)) -> list[emp_work_detail.Detail]:
-    return await emp_work_detail.select_detail_workdids([int(id) for id in work_ids.split('-')])
+    return await emp_work_detail.select_detail_workdids(work_ids)
 
 # GET details by emp_id and list of work_ids
 @app.get("/details/{emp_id}")
 async def get_detail_empid_workids(emp_id: int, work_ids: str = Query(None)) -> list[emp_work_detail.Detail]:
-    return await emp_work_detail.select_detail_empid_workids(emp_id, [int(id) for id in work_ids.split('-')])
+    return await emp_work_detail.select_detail_empid_workids(emp_id, work_ids)
 
 @app.post("/details")
 async def post_detail(new_detail: emp_work_detail.Detail) -> emp_work_detail.Detail:
@@ -95,10 +95,10 @@ async def get_all_payments() -> list[payments.Payments]:
 async def get_payment_id(pmt_id: int) -> payments.Payments:
     return await payments.select_payment_id(pmt_id)
 
-# GET detail by list of work_ids
+# GET detail by list of work_ids (1-2-3-4-5-etc.)
 @app.get("/payments")
 async def get_payments_workid_list(pmt_ids: str = Query(None)) -> list[payments.Payments]:
-    return await payments.select_payment_workdids([int(id) for id in pmt_ids.split('-')])
+    return await payments.select_payment_workdids(pmt_ids)
 
 @app.post("/payments")
 async def post_payment(new_detail: payments.Payments) -> payments.Payments:
