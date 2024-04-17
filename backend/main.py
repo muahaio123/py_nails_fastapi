@@ -1,5 +1,4 @@
-from re import I
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query
 from service import employees, works, payments, emp_work_detail
 
 # run the program with this command: py -m uvicorn main:app --reload

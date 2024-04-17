@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from sqlite3 import Error
 from typing import Any
-from database import pool
+from service.database import pool
 
 @dataclass
 class Payments:

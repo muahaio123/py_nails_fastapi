@@ -7,29 +7,55 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link href="newwork.css" rel="stylesheet" crossorigin="anonymous">
+        <link href="newwork.css" rel="stylesheet">
         <title>New Work Form</title>
     </head>
     <body>
+        <h2 style="position: relative; text-align: center;">New Work Form</h2>
         <form id="newWorkForm">
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            <label class="mb-2">
+                <span for="work_datetime" class="form-label">Date Time:&nbsp;</span>
+                <input type="datetime" id="work_datetime" disabled>
+            </label>
+            <label class="mb-2">
+                <span for="work_amount" class="form-label">Amount:&nbsp;&nbsp;$</span>
+                <input type="number" id="work_amount" step="1">
+            </label>
+            <label class="mb-2">
+                <span for="work__tip" class="form-label">Tip:&emsp;&emsp;&nbsp;&nbsp;&nbsp;$</span>
+                <input type="number" id="work__tip" step="1">
+            </label>
+            <label class="mb-2">
+                <span for="work_discount" class="form-label">Discount: $</span>
+                <input type="number" id="work_discount" step="1">
+            </label>
+            <label class="mb-2">
+                <span for="work_grandtotal" class="form-label">Total:&emsp;&emsp;$</span>
+                <input type="number" id="work_grandtotal" step="1">
+            </label>
+
+            <div>
+                <ul id="detail_list">
+                    <li id="emp_work_details">
+                        <label class="mb-2">
+                            <span for="detail_name[]" class="form-label">Employee:</span>
+                            <select name="detail_name[]" id="detail_name[]"></select>
+                        </label>
+                    </li>
+                </ul>
             </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
+
+            <label class="mb-2">
+                <span for="work_notes" class="form-label">Notes:&emsp;&emsp;</span>
+                <textarea id="work_notes"></textarea>
+            </label>
+            <br>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
         <!-- Option 1: Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script src="newwork.js" crossorigin="anonymous"></script>
+        <script src="newwork.js"></script>
+        <script src="../data_service/employee_service.js" type="module" ></script>
     </body>
 </html>
