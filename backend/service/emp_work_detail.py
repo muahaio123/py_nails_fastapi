@@ -1,10 +1,11 @@
-from dataclasses import dataclass
 from sqlite3 import Error
 from typing import Any
 from service.database import pool
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+import logging
 
-@dataclass
+logger = logging.getLogger(__name__)
+
 class Detail(BaseModel):
     detail_id: int = -1
     work_id: int = 0
@@ -12,56 +13,63 @@ class Detail(BaseModel):
     emp_amount: float = 0
     emp_tip: float = 0
     detail_notes: str = ""
+    
+    @field_validator('emp_amount', 'emp_tip')
+    @classmethod
+    def validate_amounts(cls, v):
+        if v < 0:
+            raise ValueError('Amounts cannot be negative')
+        return v
 
 def getDefaultDetail() -> Detail:
     return Detail(detail_id=-1, work_id=0, emp_id=0, emp_amount=0, emp_tip=0, detail_notes="")
     
 # Implement all 4 CRUD operations on emp_work_detail table
-async def row_to_detail(row: list[Any]):
+def row_to_detail(row: list[Any]):
     return Detail(detail_id=row[0], work_id=row[1], emp_id=row[2], emp_amount=row[3], emp_tip=row[4], detail_notes=row[5])
 
-async def list_to_detail(rows: list[Any]):
-    return [await row_to_detail(row) for row in rows]
+def list_to_detail(rows: list[Any]):
+    return [row_to_detail(row) for row in rows]
 
 # GET all emp_work_detail
-async def select_all_detail() -> list[Detail]:
+def select_all_detail() -> list[Detail]:
     with pool.connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM emp_work_detail")
         output = cursor.fetchall()
 
-    return await list_to_detail(output)
+    return list_to_detail(output)
 
 # GET emp_work_detail by ID
-async def select_detail_id(id: int) -> Detail:
+def select_detail_id(id: int) -> Detail:
     with pool.connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM emp_work_detail WHERE detail_id = ?", (id,))
         output = cursor.fetchone()
 
-    return await row_to_detail(output) if output else getDefaultDetail()
+    return row_to_detail(output) if output else getDefaultDetail()
 
 # GET emp_work_detail by list of work_id(s):
-async def select_detail_workdids(work_ids: str) -> list[Detail]:
+def select_detail_workdids(work_ids: str) -> list[Detail]:
     with pool.connection() as conn:
         cursor = conn.cursor()
 
         cursor.execute("SELECT * FROM emp_work_detail WHERE work_id IN (?)", (work_ids.replace('-', ','),))
         output = cursor.fetchall()
     
-    return await list_to_detail(output)
+    return list_to_detail(output)
 
 # GET emp_work_detail by emp_id and list of work_id(s):
-async def select_detail_empid_workids(emp_id: int, work_ids: str) -> list[Detail]:
+def select_detail_empid_workids(emp_id: int, work_ids: str) -> list[Detail]:
     with pool.connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM emp_work_detail WHERE emp_id = ? AND work_id IN (?)", (emp_id, work_ids.replace('-', ',')))
         output = cursor.fetchall()
     
-    return await list_to_detail(output)
+    return list_to_detail(output)
 
 # POST / create new emp_work_detail
-async def create_new_detail(new_detail: Detail) -> Detail:
+def create_new_detail(new_detail: Detail) -> Detail:
     with pool.connection() as conn:
         cursor = conn.cursor()
 
@@ -79,12 +87,12 @@ async def create_new_detail(new_detail: Detail) -> Detail:
     return new_detail
 
 # PUT / update existing emp_work_detail
-async def update_existing_detail(exist_detail: Detail) -> Detail:
+def update_existing_detail(exist_detail: Detail) -> Detail:
     with pool.connection() as conn:
         cursor = conn.cursor()
 
         try:
-            found_detail = await select_detail_id(exist_detail.detail_id)
+            found_detail = select_detail_id(exist_detail.detail_id)
             if found_detail != -1:
                 cursor.execute("UPDATE emp_work_detail SET work_id=?, emp_id=?, emp_amount=?, emp_tip=?, detail_notes=? WHERE detail_id=?",
                             (exist_detail.work_id, exist_detail.emp_id, exist_detail.emp_amount, exist_detail.emp_tip, exist_detail.detail_notes, exist_detail.detail_id))
@@ -99,12 +107,12 @@ async def update_existing_detail(exist_detail: Detail) -> Detail:
     return exist_detail
 
 # DELETE existing detail by ID
-async def delete_existing_detail(exist_detail_id: int) -> Detail:
+def delete_existing_detail(exist_detail_id: int) -> Detail:
     with pool.connection() as conn:
         cursor = conn.cursor()
 
         try:
-            found_detail = await select_detail_id(exist_detail_id)
+            found_detail = select_detail_id(exist_detail_id)
             if found_detail.work_id != -1:
                 cursor.execute("DELETE FROM emp_work_detail WHERE detail_id=?", (exist_detail_id,))
                 conn.commit()

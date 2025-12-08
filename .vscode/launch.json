@@ -11,7 +11,7 @@
             "command": "http-server -p 80 -o /frontend/home/home.html"
         },
         {
-            "name": "FastAPI",
+            "name": "FastAPI backend",
             "type": "debugpy",
             "request": "launch",
             "cwd": "${workspaceFolder}/backend",
