@@ -3,11 +3,11 @@
     "configurations": [
         {
             "name": "Static HTTP Server (Frontend)",
-            "type": "node",
+            "type": "debugpy",
             "request": "launch",
-            "runtimeExecutable": "npx",
-            "runtimeArgs": ["http-server", "frontend", "-p", "8080", "-o", "/frontend/home/home.html"],
-            "cwd": "${workspaceFolder}",
+            "module": "http.server",
+            "args": ["8080"],
+            "cwd": "${workspaceFolder}/frontend",
             "console": "integratedTerminal"
         },
         {
@@ -22,6 +22,15 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/backend"
             }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Run Frontend + Backend",
+            "configurations": [
+                "Static HTTP Server (Frontend)",
+                "Python: FastAPI (uvicorn)"
+            ]
         }
     ]
 }

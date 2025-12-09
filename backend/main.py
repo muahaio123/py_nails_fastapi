@@ -122,63 +122,63 @@ def delete_work(work_id: int) -> works.Works:
 ##### APIs for Works #####
 
 ##### APIs for Employee Work Details #####
-@app.get("/details/all_details")
+@app.get("/details/all_details", tags=["Employee Work Details"])
 def get_all_details() -> list[emp_work_detail.Detail]:
     return emp_work_detail.select_all_detail()
 
-@app.get("/details/by-id/{work_id}")
+@app.get("/details/by-id/{work_id}", tags=["Employee Work Details"])
 def get_detail_id(work_id: int) -> emp_work_detail.Detail:
     return emp_work_detail.select_detail_id(work_id)
 
 # GET detail by list of work_ids
-@app.get("/details/by-workids")
+@app.get("/details/by-workids", tags=["Employee Work Details"])
 def get_details_workid_list(work_ids: str = Query(None)) -> list[emp_work_detail.Detail]:
     return emp_work_detail.select_detail_workdids(work_ids)
 
 # GET details by emp_id and list of work_ids
-@app.get("/details/by-empid/{emp_id}")
+@app.get("/details/by-empid/{emp_id}", tags=["Employee Work Details"])
 def get_detail_empid_workids(emp_id: int, work_ids: str = Query(None)) -> list[emp_work_detail.Detail]:
     return emp_work_detail.select_detail_empid_workids(emp_id, work_ids)
 
-@app.post("/details/new_detail")
+@app.post("/details/new_detail", tags=["Employee Work Details"])
 def post_detail(new_detail: emp_work_detail.Detail) -> emp_work_detail.Detail:
     return emp_work_detail.create_new_detail(new_detail)
     
-@app.put("/details/update_detail")
+@app.put("/details/update_detail", tags=["Employee Work Details"])
 def put_detail(exist_detail: emp_work_detail.Detail) -> emp_work_detail.Detail:
     return emp_work_detail.update_existing_detail(exist_detail)    
 
-@app.delete("/details/delete_detail/{detail_id}")
+@app.delete("/details/delete_detail/{detail_id}", tags=["Employee Work Details"])
 def delete_detail(detail_id: int) -> emp_work_detail.Detail:
     return emp_work_detail.delete_existing_detail(detail_id)
 ##### APIs for Employee Work Details #####
 
 ##### APIs for Payments #####
-@app.get("/payments/all_payments")
+@app.get("/payments/all_payments", tags=["Payments"])
 def get_all_payments() -> list[payments.Payments]:
     return payments.select_all_payments()
 
-@app.get("/payments/by-id/{pmt_id}")
+@app.get("/payments/by-id/{pmt_id}", tags=["Payments"])
 def get_payment_id(pmt_id: int) -> payments.Payments:
     return payments.select_payment_id(pmt_id)
 
 # GET detail by list of work_ids (1-2-3-4-5-etc.)
-@app.get("/payments/by-pmtids/{pmt_ids}")
+@app.get("/payments/by-pmtids/{pmt_ids}", tags=["Payments"])
 def get_payments_workid_list(pmt_ids: str) -> list[payments.Payments]:
     return payments.select_payment_pmtids(pmt_ids)
 
 # Create new payment
-@app.post("/payments/new_payment")
+@app.post("/payments/new_payment", tags=["Payments"])
 def post_payment(new_detail: payments.Payments) -> payments.Payments:
     return payments.create_new_payment(new_detail)
 
 # Update existing payment
-@app.put("/payments/update_payment")
+@app.put("/payments/update_payment", tags=["Payments"])
 def put_payment(exist_detail: payments.Payments) -> payments.Payments:
     return payments.update_existing_payment(exist_detail)    
 
 # Delete existing payment
-@app.delete("/payments/delete_payment/{pmt_id}")
+@app.delete("/payments/delete_payment/{pmt_id}", tags=["Payments"])
 def delete_payments(pmt_id: int) -> payments.Payments:
     return payments.delete_existing_payment(pmt_id)
 ##### APIs for Payments #####

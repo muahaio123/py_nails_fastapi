@@ -1,0 +1,82 @@
+<div id="newWorkOffcanvas" class="offcanvas offcanvas-end" tabindex="-1" aria-labelledby="newWorkOffcanvasLabel" style="width: 50%; background-color: #fff; box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);">
+    <div class="offcanvas-header" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: none; padding: 1.5rem;">
+        <h5 class="offcanvas-title text-white fw-bold" id="newWorkOffcanvasLabel">
+            <i class="bi bi-plus-circle" style="margin-right: 8px;"></i>New Work Entry
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" style="padding: 0; display: flex; flex-direction: column;">
+        <div style="flex: 1; overflow-y: auto; padding: 1.5rem;">
+            <form id="newWorkFormOffcanvas" class="form-section">
+                <!-- Date Time -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="work_datetime_offcanvas" class="form-label">
+                        <i class="bi bi-calendar-event"></i> Date Time
+                    </label>
+                    <input type="datetime-local" id="work_datetime_offcanvas" class="form-control">
+                </div>
+
+                <!-- Overall Discount -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="work_discount_offcanvas" class="form-label">
+                        <i class="bi bi-tag"></i> Overall Discount ($)
+                    </label>
+                    <input type="number" id="work_discount_offcanvas" class="form-control" step="0.01" min="0">
+                </div>
+
+                <!-- Employee Work Items Container -->
+                <div id="employeeWorkItemsContainer" style="margin-bottom: 1.5rem;">
+                    <!-- Work items will be added here dynamically -->
+                </div>
+
+                <!-- Add Employee Button -->
+                <button type="button" id="addEmployeeBtn" class="btn btn-outline-primary w-100" style="margin-bottom: 1.5rem;">
+                    <i class="bi bi-plus-circle"></i> Add Employee Work
+                </button>
+
+                <!-- Overall Notes -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="work_notes_offcanvas" class="form-label">
+                        <i class="bi bi-chat-left-text"></i> Overall Notes
+                    </label>
+                    <textarea id="work_notes_offcanvas" class="form-control" placeholder="Add notes for the whole work session..." rows="3"></textarea>
+                </div>
+
+                <!-- Summary -->
+                <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <small style="color: #666;">Total Amount</small>
+                            <div style="font-size: 1.25rem; font-weight: bold; color: #2c3e50;">
+                                $<span id="totalAmount">0.00</span>
+                            </div>
+                        </div>
+                        <div>
+                            <small style="color: #666;">Total Tips</small>
+                            <div style="font-size: 1.25rem; font-weight: bold; color: #27ae60;">
+                                $<span id="totalTips">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                        <small style="color: #666;">Grand Total</small>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #2980b9;">
+                            $<span id="grandTotal">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Buttons at bottom -->
+        <div style="padding: 1.5rem; border-top: 1px solid #e0e0e0; display: flex; gap: 1rem;">
+            <button type="button" class="btn btn-secondary flex-grow-1" id="cancelBtnOffcanvas">
+                <i class="bi bi-x-circle"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary flex-grow-1" form="newWorkFormOffcanvas">
+                <i class="bi bi-check-circle"></i> Submit
+            </button>
+        </div>
+    </div>
+</div>
+
