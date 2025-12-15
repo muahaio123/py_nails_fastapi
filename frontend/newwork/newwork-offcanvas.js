@@ -56,7 +56,7 @@ function addEmployeeWorkItem() {
                     <label class="form-label" style="font-size: 0.9rem;">
                         <i class="bi bi-cash-coin"></i> Amount ($)
                     </label>
-                    <input type="number" class="form-control work-amount" data-item-id="${itemId}" step="1" min="0" value="0">
+                    <input type="number" class="form-control work-amount" data-item-id="${itemId}" step="1" min="0">
                 </div>
                 
                 <!-- Tip -->
@@ -64,7 +64,7 @@ function addEmployeeWorkItem() {
                     <label class="form-label" style="font-size: 0.9rem;">
                         <i class="bi bi-gift"></i> Tip ($)
                     </label>
-                    <input type="number" class="form-control work-tip" data-item-id="${itemId}" step="1" min="0" value="0">
+                    <input type="number" class="form-control work-tip" data-item-id="${itemId}" step="1" min="0">
                 </div>
             </div>
         </div>
@@ -137,6 +137,11 @@ function updateTotals() {
     
     document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
     document.getElementById("totalTips").textContent = totalTips.toFixed(2);
+    // Update total discount display
+    const totalDiscountEl = document.getElementById("totalDiscount");
+    if (totalDiscountEl) {
+        totalDiscountEl.textContent = discount.toFixed(2);
+    }
     document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
 }
 
@@ -174,6 +179,8 @@ function initializeNewWorkOffcanvas() {
     // Handle discount changes
     if (discountInput) {
         discountInput.addEventListener('change', updateTotals);
+        // Also listen for input events so totals update as user types
+        discountInput.addEventListener('input', updateTotals);
     }
     
     // Handle cancel button - clear form and close

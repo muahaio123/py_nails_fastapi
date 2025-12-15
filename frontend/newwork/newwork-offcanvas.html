@@ -1,14 +1,14 @@
 <link rel="stylesheet" href="/newwork/newwork-offcanvas.css?v=1">
-<div id="newWorkOffcanvas" class="offcanvas offcanvas-end" tabindex="-1" aria-labelledby="newWorkOffcanvasLabel" style="width: 50%; background-color: #fff; box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);">
+<div id="newWorkOffcanvas" class="offcanvas offcanvas-end" tabindex="-1" aria-labelledby="newWorkOffcanvasLabel" style="width: 42%; background-color: #fff; box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);">
     
-    <div class="offcanvas-header" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: none; padding: 1.5rem;">
+    <div class="offcanvas-header" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border: none; padding: 1.25rem;">
         <h5 class="offcanvas-title text-white fw-bold" id="newWorkOffcanvasLabel">
             <i class="bi bi-plus-circle" style="margin-right: 8px;"></i>New Work Entry
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body" style="padding: 0; display: flex; flex-direction: column;">
-        <div style="flex: 1; overflow-y: auto; padding: 1.5rem;">
+        <div style="flex: 1; overflow-y: auto; padding: 1.1rem;">
             <form id="newWorkFormOffcanvas" class="form-section">
                 <!-- Date Time -->
                 <div class="left-col" style="margin-bottom: 1.5rem;">
@@ -48,13 +48,13 @@
                 <div class="summary-card right-col" style="background-color: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
-                            <small style="color: #666;">Total Amount</small>
+                            <small style="color: #666;">Amount</small>
                             <div style="font-size: 1.25rem; font-weight: bold; color: #2c3e50;">
                                 $<span id="totalAmount">0.00</span>
                             </div>
                         </div>
                         <div>
-                            <small style="color: #666;">Total Tips</small>
+                            <small style="color: #666;">Tips</small>
                             <div style="font-size: 1.25rem; font-weight: bold; color: #27ae60;">
                                 $<span id="totalTips">0.00</span>
                             </div>
@@ -62,15 +62,9 @@
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
                         <div>
-                            <small style="color: #666;">Total Discount</small>
+                            <small style="color: #666;">Discount</small>
                             <div style="font-size: 1.1rem; font-weight: bold; color: #e74c3c;">
                                 -$<span id="totalDiscount">0.00</span>
-                            </div>
-                        </div>
-                        <div>
-                            <small style="color: #666;">Subtotal</small>
-                            <div style="font-size: 1.1rem; font-weight: bold; color: #34495e;">
-                                $<span id="subtotal">0.00</span>
                             </div>
                         </div>
                     </div>

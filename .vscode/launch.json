@@ -5,7 +5,7 @@
             "name": "Static HTTP Server (Frontend)",
             "type": "debugpy",
             "request": "launch",
-            "module": "http.server",
+            "program": "${workspaceFolder}/frontend/run_http_server.py",
             "args": ["8080"],
             "cwd": "${workspaceFolder}/frontend",
             "console": "integratedTerminal"
