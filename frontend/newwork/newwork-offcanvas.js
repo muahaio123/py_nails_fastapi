@@ -137,11 +137,7 @@ function updateTotals() {
     
     document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
     document.getElementById("totalTips").textContent = totalTips.toFixed(2);
-    // Update total discount display
-    const totalDiscountEl = document.getElementById("totalDiscount");
-    if (totalDiscountEl) {
-        totalDiscountEl.textContent = discount.toFixed(2);
-    }
+    document.getElementById("totalDiscount").textContent = discount.toFixed(2);
     document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
 }
 
