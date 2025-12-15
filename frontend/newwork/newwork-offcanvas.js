@@ -46,7 +46,7 @@ function addEmployeeWorkItem() {
                     <i class="bi bi-person"></i> Employee
                 </label>
                 <select class="form-select employee-select" data-item-id="${itemId}">
-                    <option value="">Select an employee...</option>
+                    <option value="">Select employee...</option>
                 </select>
             </div>
             
@@ -56,7 +56,7 @@ function addEmployeeWorkItem() {
                     <label class="form-label" style="font-size: 0.9rem;">
                         <i class="bi bi-cash-coin"></i> Amount ($)
                     </label>
-                    <input type="number" class="form-control work-amount" data-item-id="${itemId}" step="0.01" min="0" value="0">
+                    <input type="number" class="form-control work-amount" data-item-id="${itemId}" step="1" min="0" value="0">
                 </div>
                 
                 <!-- Tip -->
@@ -64,7 +64,7 @@ function addEmployeeWorkItem() {
                     <label class="form-label" style="font-size: 0.9rem;">
                         <i class="bi bi-gift"></i> Tip ($)
                     </label>
-                    <input type="number" class="form-control work-tip" data-item-id="${itemId}" step="0.01" min="0" value="0">
+                    <input type="number" class="form-control work-tip" data-item-id="${itemId}" step="1" min="0" value="0">
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@ function initializeNewWorkOffcanvas() {
                 });
             });
             
-            console.log("New Work Form submitted:", workData);
+            // Submission handler - TODO: send to backend API
             // TODO: Send workData to backend API
             
             // Close offcanvas after submission
@@ -228,8 +228,22 @@ function initializeNewWorkOffcanvas() {
             loadEmployeesOffcanvas();
         });
     }
+
+    // Ensure navbar button opens the offcanvas
+    const workBtn = document.getElementById("newWorkBtn");
+    if (workBtn && offcanvas) {
+        workBtn.addEventListener('click', function() {
+            const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
+            bsOffcanvas.show();
+        });
+    }
 }
 
-// Export functions for use in navbar loader
-export { initializeNewWorkOffcanvas, clearNewWorkForm, setDefaultDateTimeOffcanvas, loadEmployeesOffcanvas };
+// Expose functions to global scope for use by the navbar loader
+window.initializeNewWorkOffcanvas = initializeNewWorkOffcanvas;
+window.clearNewWorkForm = clearNewWorkForm;
+window.setDefaultDateTimeOffcanvas = setDefaultDateTimeOffcanvas;
+window.loadEmployeesOffcanvas = loadEmployeesOffcanvas;
+window.addEmployeeWorkItem = addEmployeeWorkItem;
+window.updateTotals = updateTotals;
 

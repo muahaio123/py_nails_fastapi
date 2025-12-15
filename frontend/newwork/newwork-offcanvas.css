@@ -1,0 +1,76 @@
+/* Styling dedicated to the New Work offcanvas component */
+
+#newWorkOffcanvas {
+    width: 50%;
+    max-width: 820px;
+}
+
+#newWorkOffcanvas .offcanvas-body {
+    padding: 0;
+}
+
+/* Form layout: use a flexible flow. Specific areas (employee items) use grid for their internal layout. */
+#newWorkOffcanvas .form-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+#newWorkOffcanvas #employeeWorkItemsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+#newWorkOffcanvas #addEmployeeBtn {
+    width: 70%;
+    margin: 0.75rem auto 1rem auto;
+    display: block;
+    justify-self: center;
+}
+
+/* Make the Add Employee button span full width below the employee items */
+#newWorkOffcanvas .form-section > button#addEmployeeBtn {
+    flex: 1 1 100%;
+    width: auto;
+    margin: 0.75rem 0 1rem 0;
+    align-self: start;
+}
+
+#newWorkOffcanvas .summary-card {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    flex: 1 1 35%;
+    max-width: 380px;
+    align-self: start;
+}
+
+#newWorkOffcanvas .summary-card small { color: #666; }
+
+#newWorkOffcanvas .form-control,
+#newWorkOffcanvas .form-select,
+#newWorkOffcanvas textarea.form-control {
+    border-radius: 6px;
+    border: 1px solid #bdc3c7;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    background-color: #fff;
+}
+
+#newWorkOffcanvas .btn-primary, #newWorkOffcanvas .btn-secondary {
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+}
+
+@media (max-width: 768px) {
+    #newWorkOffcanvas { width: 100%; }
+    #newWorkOffcanvas .form-section { flex-direction: column; }
+    #newWorkOffcanvas #addEmployeeBtn { width: 100%; }
+    #newWorkOffcanvas .summary-card { flex: 1 1 100%; max-width: none; }
+}
+
+/* Default placement for children: mark left/right areas via helper classes */
+#newWorkOffcanvas .form-section > .left-col { flex: 1 1 60%; min-width: 220px; }
+#newWorkOffcanvas .form-section > .right-col { flex: 1 1 35%; max-width: 380px; }

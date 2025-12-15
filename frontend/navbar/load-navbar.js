@@ -9,8 +9,8 @@ function loadNavbar(activePage) {
             navContainer.innerHTML = html;
             document.body.insertBefore(navContainer, document.body.firstChild);
             
-            // Load the new work offcanvas component
-            loadNewWorkComponent();
+            // Load the new work offcanvas component, pass the active page so component can adapt
+            loadNewWorkComponent(activePage);
             
             // Set the active nav item with styling
             if (activePage === 'home') {
@@ -77,7 +77,7 @@ function loadNavbar(activePage) {
 }
 
 // Function to load new work offcanvas component
-function loadNewWorkComponent() {
+function loadNewWorkComponent(sourcePage) {
     fetch('../newwork/newwork-offcanvas.html?v=1')
         .then(response => response.text())
         .then(html => {
@@ -85,15 +85,48 @@ function loadNewWorkComponent() {
             const container = document.createElement('div');
             container.innerHTML = html;
             document.body.appendChild(container);
-            
-            // Initialize the offcanvas
-            initializeOffcanvas();
+
+            // Add a source-specific class to the offcanvas for page-specific styling (e.g., source-home)
+            try {
+                if (sourcePage) {
+                    const offcanvasEl = document.getElementById('newWorkOffcanvas');
+                    if (offcanvasEl) {
+                        offcanvasEl.classList.add(`source-${sourcePage}`);
+                    }
+                }
+            } catch (err) {
+                // ignore if element not present yet
+            }
+
+            // Load the JavaScript file for newwork component
+            const script = document.createElement('script');
+            script.src = '../newwork/newwork-offcanvas.js?v=1';
+            script.type = 'text/javascript';
+            script.onload = function() {
+                // Initialize the offcanvas after script loads
+                try {
+                    initializeOffcanvas();
+                } catch (err) {
+                    console.error('initializeOffcanvas threw:', err);
+                }
+            };
+            document.body.appendChild(script);
         })
         .catch(error => console.error('Error loading new work component:', error));
 }
 
 // Function to initialize offcanvas
 function initializeOffcanvas() {
+    // Prefer the centralized initializer from newwork-offcanvas if available
+    if (window.initializeNewWorkOffcanvas) {
+        try {
+            window.initializeNewWorkOffcanvas();
+        } catch (err) {
+            console.error('window.initializeNewWorkOffcanvas threw:', err);
+        }
+        return;
+    }
+
     var workOffcanvas = document.getElementById("newWorkOffcanvas");
     var workBtn = document.getElementById("newWorkBtn");
 
@@ -108,7 +141,7 @@ function initializeOffcanvas() {
         }
     }
     
-    // Setup form and button handlers
+    // Setup form and button handlers (fallback)
     setupNewWorkForm();
 }
 
@@ -130,212 +163,37 @@ function setDefaultDateTimeOffcanvas() {
 
 // Load employees for offcanvas form
 function loadEmployeesOffcanvas() {
-    const employeesList = [
-        { id: 1, name: "Long" },
-        { id: 2, name: "Soc" }
-    ];
-    return employeesList;
+    // Delegate to newwork-offcanvas if available
+    if (window.loadEmployeesOffcanvas) return window.loadEmployeesOffcanvas();
 }
 
 // Add employee work item
 function addEmployeeWorkItem() {
-    const container = document.getElementById("employeeWorkItemsContainer");
-    if (!container) return;
-    
-    const itemId = Date.now();
-    const employeesList = loadEmployeesOffcanvas();
-    
-    const itemHTML = `
-        <div class="employee-work-item" data-item-id="${itemId}" style="background-color: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #3498db;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h6 style="margin: 0;">Employee Work</h6>
-                <button type="button" class="btn btn-sm btn-outline-danger remove-item-btn" data-item-id="${itemId}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-            
-            <!-- Employee Selection -->
-            <div style="margin-bottom: 1rem;">
-                <label class="form-label" style="font-size: 0.9rem;">
-                    <i class="bi bi-person"></i> Employee
-                </label>
-                <select class="form-select employee-select" data-item-id="${itemId}">
-                    <option value="">Select an employee...</option>
-                </select>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <!-- Amount -->
-                <div>
-                    <label class="form-label" style="font-size: 0.9rem;">
-                        <i class="bi bi-cash-coin"></i> Amount ($)
-                    </label>
-                    <input type="number" class="form-control work-amount" data-item-id="${itemId}" step="0.01" min="0" value="0">
-                </div>
-                
-                <!-- Tip -->
-                <div>
-                    <label class="form-label" style="font-size: 0.9rem;">
-                        <i class="bi bi-gift"></i> Tip ($)
-                    </label>
-                    <input type="number" class="form-control work-tip" data-item-id="${itemId}" step="0.01" min="0" value="0">
-                </div>
-            </div>
-        </div>
-    `;
-    
-    container.insertAdjacentHTML('beforeend', itemHTML);
-    
-    // Populate employee dropdown
-    const employeeSelect = document.querySelector(`[data-item-id="${itemId}"].employee-select`);
-    employeesList.forEach(emp => {
-        const option = document.createElement("option");
-        option.value = emp.id;
-        option.textContent = emp.name;
-        employeeSelect.appendChild(option);
-    });
-    
-    // Add event listeners
-    setupItemEventListeners(itemId);
+    if (window.addEmployeeWorkItem) return window.addEmployeeWorkItem();
 }
 
 // Setup event listeners for a work item
 function setupItemEventListeners(itemId) {
-    const removeBtn = document.querySelector(`[data-item-id="${itemId}"].remove-item-btn`);
-    const amountInput = document.querySelector(`[data-item-id="${itemId}"].work-amount`);
-    const tipInput = document.querySelector(`[data-item-id="${itemId}"].work-tip`);
-    
-    if (removeBtn) {
-        removeBtn.addEventListener('click', function() {
-            removeEmployeeWorkItem(itemId);
-        });
-    }
-    
-    if (amountInput) {
-        amountInput.addEventListener('change', updateTotals);
-    }
-    
-    if (tipInput) {
-        tipInput.addEventListener('change', updateTotals);
-    }
+    if (window.setupItemEventListeners) return window.setupItemEventListeners(itemId);
 }
 
 // Remove employee work item
 function removeEmployeeWorkItem(itemId) {
-    const item = document.querySelector(`[data-item-id="${itemId}"]`);
-    if (item) {
-        item.remove();
-        updateTotals();
-    }
+    if (window.removeEmployeeWorkItem) return window.removeEmployeeWorkItem(itemId);
 }
 
 // Update totals display
 function updateTotals() {
-    let totalAmount = 0;
-    let totalTips = 0;
-    
-    document.querySelectorAll('.employee-work-item').forEach(item => {
-        const amountInput = item.querySelector('.work-amount');
-        const tipInput = item.querySelector('.work-tip');
-        
-        if (amountInput) {
-            totalAmount += parseFloat(amountInput.value) || 0;
-        }
-        if (tipInput) {
-            totalTips += parseFloat(tipInput.value) || 0;
-        }
-    });
-    
-    const discountElement = document.getElementById("work_discount_offcanvas");
-    const discount = discountElement ? (parseFloat(discountElement.value) || 0) : 0;
-    const grandTotal = totalAmount + totalTips - discount;
-    
-    const totalAmountEl = document.getElementById("totalAmount");
-    const totalTipsEl = document.getElementById("totalTips");
-    const grandTotalEl = document.getElementById("grandTotal");
-    
-    if (totalAmountEl) totalAmountEl.textContent = totalAmount.toFixed(2);
-    if (totalTipsEl) totalTipsEl.textContent = totalTips.toFixed(2);
-    if (grandTotalEl) grandTotalEl.textContent = grandTotal.toFixed(2);
+    if (window.updateTotals) return window.updateTotals();
 }
 
 // Clear form to brand new state
 function clearNewWorkForm() {
-    const form = document.getElementById("newWorkFormOffcanvas");
-    if (form) {
-        form.reset();
-        // Reset datetime to current time
-        setDefaultDateTimeOffcanvas();
-        // Clear all work items
-        document.getElementById("employeeWorkItemsContainer").innerHTML = '';
-        // Reset totals
-        updateTotals();
-    }
+    if (window.clearNewWorkForm) return window.clearNewWorkForm();
 }
 
 // Setup new work form handlers
 function setupNewWorkForm() {
-    const cancelBtn = document.getElementById("cancelBtnOffcanvas");
-    const addEmployeeBtn = document.getElementById("addEmployeeBtn");
-    const form = document.getElementById("newWorkFormOffcanvas");
-    const offcanvas = document.getElementById("newWorkOffcanvas");
-    const discountInput = document.getElementById("work_discount_offcanvas");
-    
-    // Handle add employee button
-    if (addEmployeeBtn) {
-        addEmployeeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            addEmployeeWorkItem();
-        });
-    }
-    
-    // Handle discount changes
-    if (discountInput) {
-        discountInput.addEventListener('change', updateTotals);
-    }
-    
-    // Handle cancel button - clear form and close
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
-            clearNewWorkForm();
-            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
-            if (bsOffcanvas) {
-                bsOffcanvas.hide();
-            }
-        });
-    }
-    
-    // Handle form submission
-    if (form) {
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
-            // Collect all work items data
-            const workData = {
-                datetime: document.getElementById("work_datetime_offcanvas").value,
-                discount: parseFloat(document.getElementById("work_discount_offcanvas").value) || 0,
-                notes: document.getElementById("work_notes_offcanvas").value,
-                items: []
-            };
-            
-            document.querySelectorAll('.employee-work-item').forEach(item => {
-                const itemId = item.getAttribute('data-item-id');
-                workData.items.push({
-                    employee_id: item.querySelector('.employee-select').value,
-                    amount: parseFloat(item.querySelector('.work-amount').value) || 0,
-                    tip: parseFloat(item.querySelector('.work-tip').value) || 0
-                });
-            });
-            
-            console.log("New Work Form submitted:", workData);
-            // TODO: Send workData to backend API
-            
-            // Close offcanvas after submission
-            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
-            if (bsOffcanvas) {
-                bsOffcanvas.hide();
-            }
-            // Clear form for next entry
-            clearNewWorkForm();
-        });
-    }
+    // Delegate entire form setup/handlers to the new work component if available
+    if (window.initializeNewWorkOffcanvas) return;
 }
